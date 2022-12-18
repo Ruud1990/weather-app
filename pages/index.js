@@ -1,10 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
+import axios from 'axios'
+import { useState } from 'react'
+import {BsSearch} from 'react-icons/bs'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [city, setCity] = useState('');
+  const [weather, setWeather] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=london&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+
+  const fetchWeather = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    axios.get(url).then((resp) => {
+      setWeather(resp.data);
+      console.log(resp.data)
+    })
+    setLoading(false);
+    setCity('');
+  }
   return (
     <>
       <Head>
@@ -13,6 +32,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <button onClick={fetchWeather}>click</button>
     </>
   )
 }
